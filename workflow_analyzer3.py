@@ -2,27 +2,29 @@ import os
 import openai
 import streamlit as st
 
-# Load the API key from environment variables
+# Set your API key (from environment variable)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Define your function and app
+# Define a function to get a response from ChatGPT using the new API format
 def get_chatgpt_response(prompt):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-3.5-turbo",  # or "gpt-4" if you have access
             messages=[{"role": "user", "content": prompt}],
             max_tokens=150
         )
-        return response.choices[0].message['content'].strip()
+        return response['choices'][0]['message']['content'].strip()
     except Exception as e:
         return f"An error occurred: {e}"
 
-# Streamlit UI setup
+# Streamlit app setup
 st.title("ChatGPT with Streamlit")
 st.write("Ask anything to ChatGPT:")
 
+# Input text box for user prompt
 user_input = st.text_input("Enter your question here:")
 
+# Display ChatGPT response when there's input
 if user_input:
     response = get_chatgpt_response(user_input)
     st.write("ChatGPT says:")
